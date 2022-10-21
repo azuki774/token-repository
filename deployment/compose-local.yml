@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  token-manager-api:
+    image: token-manager-api:latest
+    restart: always
+    container_name: token-manager-api
+    command:
+      - /usr/local/bin/token-repository
+      - start
+      - --port=8080
+      - --db-host=token-manager-db
+    ports:
+      - "8080:80"
+    environment:
+      - TZ=Asia/Tokyo
+
+  token-manager-db:
+    image: mariadb:10.9
+    restart: always
+    container_name: token-manager-db
+    command:
+      - mysqld
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=tokenrepo
+      - MYSQL_ROOT_PASSWORD=password
+      - TZ=Asia/Tokyo
+    volumes:
+      - ../build/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
