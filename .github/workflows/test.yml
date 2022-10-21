@@ -22,10 +22,10 @@ jobs:
       - name: Test
         run: go test -v ./...
 
-        - name: vet
+      - name: vet
         run: go vet -v ./...
 
-        - name: staticcheck
+      - name: staticcheck
         run: staticcheck ./...
 
       - name: Build
