@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
 	"token-repository/internal/factory"
 
@@ -48,6 +49,7 @@ to quickly create a Cobra application.`,
 }
 
 func start(opts *StartOption) error {
+	setInfoFromEnv()
 	l, err := factory.NewLogger()
 	if err != nil {
 		return err
@@ -72,5 +74,12 @@ func init() {
 	startCmd.Flags().StringVar(&startOpt.DBInfo.Port, "db-port", "3306", "DB Port")
 	startCmd.Flags().StringVar(&startOpt.DBInfo.Name, "db-name", "tokenrepo", "DB Name")
 	startCmd.Flags().StringVar(&startOpt.DBInfo.User, "db-user", "root", "DB User")
-	startCmd.Flags().StringVar(&startOpt.DBInfo.Pass, "db-pass", "password", "DB Pass")
+	startCmd.Flags().StringVar(&startOpt.DBInfo.Pass, "db-pass", "password", "DB Pass") // overwrited by ENV
+}
+
+func setInfoFromEnv() {
+	dbpass, ok := os.LookupEnv("DB_PASS")
+	if ok {
+		startOpt.DBInfo.Pass = dbpass
+	}
 }
